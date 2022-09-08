@@ -22,26 +22,22 @@ const commonStyles =
     "min-h-[70px] sm:px-0 px-2 sm:min-w-[120px] flex justify-center items-center border-[0.5px] border-gray-400 text-sm font-light text-white";
 const listStyle = "text-white";
 
-const Input = ({ placeholder, name, type, value, handleChange }) => (
-    <input
-        placeholder={placeholder}
-        type={type}
-        step="0.0001"
-        value={value}
-        onChange={(e) => handleChange(e, name)}
-        className="my-2 w-full rounded-sm p-2 outline-none bg-transparent text-white border-none text-sm white-glassmorphism"
-    />
-);
 
-const TransactionsCard = ({ key1, owner, name, status, index }) => {
 
-    console.log(key1);
+const TransactionsCard = ({ claimId, ssn, owner, timestamp  }) => {
+
+    const {currentAccount, fetchData} = useContext(TransactionContext)
+    
+
+    const isOwner = parseInt(currentAccount) === parseInt(owner);
+    // console.log(isOwner)
+    
     return (
 
 
-        <tr key={key1}>
+        <tr key={claimId}>
             <th scope="row">
-                {key1}
+                {claimId}
             </th>
             <td>
                 <a href={`https://testnet.snowtrace.io/address/${owner}`} target="_blank" rel="noreferrer">
@@ -49,16 +45,29 @@ const TransactionsCard = ({ key1, owner, name, status, index }) => {
                 </a>
             </td>
             <td>
-                {name}
+                {ssn}
             </td>
             <td>
-                <Button
+                {timestamp}
+            </td>
+            <td>{  isOwner ? 
+            <Button
+                    color="success"
+                    className="bg-green-600 ml-2 items-center w-24 " 
+                >   <Link to={`/SentData?selectedEventId=${claimId}`} >
+                        Get Data
+                    </Link>
+                </Button> :
+                    <Button
                     color="primary"
                     className="bg-blue-600 ml-2 items-center w-24 "
-                >   <Link to={`/Response?selectedEventId=${index}`}>
-                        Response Event
+                >   <Link to={`/Response?selectedEventId=${claimId}`}>
+                    
+                        Send Claims Data
                     </Link>
                 </Button>
+                
+                }
 
             </td>
         </tr>
@@ -76,15 +85,7 @@ const Welcome = (args) => {
         requests
     } = useContext(TransactionContext);
 
-    const handleSubmit = (e) => {
-        const { addressTo, amount, keyword, message } = formData;
-        console.log(formData);
-        e.preventDefault();
-
-        if (!addressTo || !amount || !keyword || !message) return;
-
-        sendTransaction();
-    };
+   
 
     const [modal, setModal] = useState(false);
 
@@ -104,9 +105,10 @@ const Welcome = (args) => {
                     <Table className="text-white justify-center items-center">
                         <thead>
                             <tr className="decoration-transparent ">
-                                <th>Key Number</th>
+                                <th>Claim ID</th>
                                 <th>Owner Address</th>
-                                <th>Customer Name</th>
+                                <th>SSn</th>
+                                <th>Timestamp</th>
 
                                 <th></th>
                             </tr>
@@ -114,13 +116,14 @@ const Welcome = (args) => {
                         <tbody>
 
                             {
-                                ([...requests].reverse().map((request, requestId) => (
+                                ([...requests].reverse().map((request, claimId) => (
 
                                     <TransactionsCard
-                                        key1={request.key1}
+                                        claimId={request.claimId}
+                                        ssn={request.ssn}
                                         owner={request.owner}
-                                        name={request.name}
-                                        status={request.status} index={requestId} />))
+                                        timestamp={request.timestamp} 
+                                        isOwner={request.isOwner} key={claimId}/>))
                                 )
                             }
                         </tbody>

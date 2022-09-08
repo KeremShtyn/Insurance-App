@@ -33,7 +33,6 @@ const Request = () => {
     return (
         <div className='p-5 sm:w-2/4 ml-96 mt-7  justify-center justify-items-center blue-glassmorphism'>
             <Input placeholder="Key" name="_key" type="text" handleChange={handleChange} />
-            <Input placeholder="Name" name="_name" type="text" handleChange={handleChange} />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
             <button

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Navbar, Welcome, Services, Transactions } from './components'
 import Request from "./components/Request"
 import SendData from "./components/SendData"
-import RequestedDatas from "./components/RequestedDatas"
+import getClaimsData from "./components/getClaimsData"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
@@ -23,7 +23,7 @@ const App = () => {
               <Route path="/Response" component={SendData} />
               <Route path="/Transactions" component={Transactions} />
               <Route path="/Eventsending" component={Request} />
-              <Route path="/SentDatas" component={RequestedDatas} />
+              <Route path="/SentData" component={getClaimsData} />
             </Switch>
           </div>
         </BrowserRouter>

@@ -26,8 +26,8 @@ export const TransactionProvider = ({ children }) => {
     const [transactionCount, setTransactionCount] = useState(localStorage.getItem('transactionCount'));
     const [requests, setRequests] = useState([]);
     const [requestData, setRequestData] = useState([]);
-    const [sendingDatas, setSendingDatas] = useState({date: "", code: '', description: "", amount: ""});
-    const [claimData, setClaimData ] = useState([]);
+    const [sendingDatas, setSendingDatas] = useState({ date: "", code: '', description: "", amount: "" });
+    const [claimData, setClaimData] = useState([]);
 
     const metamaskAlert = ("Please install metamask");
 
@@ -41,13 +41,13 @@ export const TransactionProvider = ({ children }) => {
 
     }
     const sendDatahandleChange = (e) => {
-        
+
         const { name, value } = e.target;
         setSendingDatas(prevState => ({
             ...prevState,
             [name]: value
         }));
-    console.log(sendingDatas);
+        console.log(sendingDatas);
 
     }
 
@@ -58,7 +58,7 @@ export const TransactionProvider = ({ children }) => {
         try {
             if (!ethereum) return alert("Please install metamask")
             const accounts = await ethereum.request({ method: 'eth_accounts' });
-            
+
             if (accounts.length) {
                 setCurrentAccount(accounts[0]);
                 getAllTransactions();
@@ -76,7 +76,7 @@ export const TransactionProvider = ({ children }) => {
 
     }
 
-    
+
 
 
 
@@ -93,7 +93,7 @@ export const TransactionProvider = ({ children }) => {
         }
     }
 
-    
+
 
     const getAllTransactions = async () => {
         try {
@@ -102,22 +102,15 @@ export const TransactionProvider = ({ children }) => {
                 const transactionsContract = getEthereumContract();
 
                 const availableTransactions = await transactionsContract.getAllClaims();
-
-
                 const structuredTransactions = availableTransactions.map((request) => ({
 
                     claimId: parseInt(request?.claimId._hex),
                     ssn: request?.ssn,
                     owner: request?.owner,
                     timestamp: new Date(request.timestamp.toNumber() * 1000).toLocaleString(),
-                    
+
                 }));
-
-                // eventListener();
-
-
                 console.log(structuredTransactions);
-
                 setRequests(structuredTransactions);
             } else {
                 console.log("Ethereum is not present");
@@ -163,45 +156,40 @@ export const TransactionProvider = ({ children }) => {
 
     const fetchData = async (eventId) => {
         try {
-            
+
             if (!ethereum) return alert(metamaskAlert);
-            
+
+
             const transactionContract = getEthereumContract();
             const transactionHash = await transactionContract.getClaimsData(eventId);
-            
-            
-            const structuredTransactions = transactionHash.map((sendingData) => ({
-                
-                data: sendingData?.claimsData
-                
-            }));
-            
-            setClaimData(structuredTransactions);
-            
-            
-            
-            
+            console.log("eventId", eventId, transactionHash)
+
+
+
+            console.log("fetchData: " + transactionHash);
+
+            setClaimData(transactionHash.claimsData);
         } catch (error) {
-            
+
         }
-        
+
     }
 
 
     const sendData = async (eventId) => {
         try {
-            
+
             if (!ethereum) return alert(metamaskAlert);
 
             const transactionContract = getEthereumContract();
             const data = `date: ${sendingDatas.date}; code: ${sendingDatas.code}; description: ${sendingDatas.description}; amount: ${sendingDatas.amount};`
             const transactionHash = await transactionContract.setClaimsData(eventId, data);
-            
+
             setIsLoading(true);
             await transactionHash.wait();
             setIsLoading(false);
-            
-            
+
+
         } catch (error) {
 
         }
@@ -246,14 +234,19 @@ export const TransactionProvider = ({ children }) => {
 
     useEffect(() => {
         checkIfWalletIsConnected();
-        
+        fetchData();
+
     }, [])
 
-    
+
+
+    console.log("++++++++++", requests)
+
+
 
 
     return (
-        <TransactionContext.Provider value={{   fetchData,connectWallet, claimData, currentAccount, requests, handleChange, sendTransaction, requireData, sendData, sendDatahandleChange, sendingDatas, isLoading }}>
+        <TransactionContext.Provider value={{ fetchData, connectWallet, claimData, currentAccount, requests, handleChange, sendTransaction, requireData, sendData, sendDatahandleChange, sendingDatas, isLoading }}>
             {children}
         </TransactionContext.Provider>
     )

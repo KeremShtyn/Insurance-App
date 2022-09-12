@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { contractABI, contractAddress } from "../utils/constants"
-import { Route } from "react-router-dom";
+
 
 
 export const TransactionContext = React.createContext();
@@ -51,7 +51,7 @@ export const TransactionProvider = ({ children }) => {
 
     }
 
-
+    
 
 
     const checkIfWalletIsConnected = async () => {
@@ -111,8 +111,15 @@ export const TransactionProvider = ({ children }) => {
 
                 }));
 
+                
                 console.log(structuredTransactions);
                 setRequests(structuredTransactions);
+                
+                contract.on("ClaimEvent", (claimId)=> {
+                    console.log("New Claim Event is: ", claimId);
+                    alertify("New Claim has come...")
+                })
+
             } else {
                 console.log("Ethereum is not present");
             }

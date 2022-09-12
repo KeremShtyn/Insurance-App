@@ -48,8 +48,7 @@ const SendData = (
                             name="date"
                             type="date"
                             onChange={(e) => sendDatahandleChange(e, "date")}
-
-
+                        
                         />
                         <Label for="exampleText">
                             Code
@@ -75,6 +74,7 @@ const SendData = (
 
 
                         />
+                        {/* TODO the input must contain only amount and need contain currency*/}
                         <Label for="exampleText">
                             Amount
                         </Label>

@@ -14,7 +14,8 @@ const OwnDatas = (
     ) => {
 
     const {currentAccount, requests} =  useContext(TransactionContext)
-        
+        // TODO an error occured in this component 
+        // It may be obtained to not assign the requestId from the last page
         
   return (
     <div>

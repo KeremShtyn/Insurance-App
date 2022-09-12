@@ -33,7 +33,7 @@ const getClaimsData = ({ location }) => {
     const list = claimData.map((cData) =>
         <li>{cData}</li>
     )
-
+    // TODO This page must be styled  
 
     return (
         <div className='flex w-full justify-center 2xl:px20'>

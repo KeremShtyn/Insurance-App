@@ -33,8 +33,10 @@ const Request = () => {
     };
 
     return (
+
+        // TODO If wallet is not connected, we must hide the sending input and show a hint to connect
         <div className='p-5 sm:w-2/4 ml-96 mt-7  justify-center justify-items-center blue-glassmorphism'>
-            <Input placeholder="Key" name="_key" type="text" handleChange={handleChange} />
+            <Input placeholder="Enter a SSN" name="_key" type="text" handleChange={handleChange} />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
             { isLoading? <Loader></Loader> :
@@ -42,7 +44,7 @@ const Request = () => {
                 type='button'
                 onClick={handleSubmit}
                 className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer">
-                Send Request
+                Send Claim
             </button>}
         </div>
     )

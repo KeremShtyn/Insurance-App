@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import { TransactionContext } from '../context/TransactionContext'
+import Loader from './Loader';
 
 const Input = ({ placeholder, type, value, name, handleChange }) => (
 
@@ -16,7 +17,7 @@ const Input = ({ placeholder, type, value, name, handleChange }) => (
 
 const Request = () => {
 
-    const { currentAccount, requireData, requests, handleChange, requestData } = useContext(TransactionContext);
+    const {  requireData,isLoading,  handleChange, requestData } = useContext(TransactionContext);
 
     const handleSubmit = (e) => {
 
@@ -25,8 +26,9 @@ const Request = () => {
         e.preventDefault();
 
         //if (!_key || !_name) return;
-
+        
         requireData();
+        
         console.log("requestData: " + requestData);
     };
 
@@ -35,12 +37,13 @@ const Request = () => {
             <Input placeholder="Key" name="_key" type="text" handleChange={handleChange} />
 
             <div className="h-[1px] w-full bg-gray-400 my-2" />
-            <button
+            { isLoading? <Loader></Loader> :
+             <button
                 type='button'
                 onClick={handleSubmit}
                 className="text-white w-full mt-2 border-[1px] p-2 border-[#3d4f7c] hover:bg-[#3d4f7c] rounded-full cursor-pointer">
                 Send Request
-            </button>
+            </button>}
         </div>
     )
 }

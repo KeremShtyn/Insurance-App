@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 import { contractABI, contractAddress } from "../utils/constants"
+import { Route } from "react-router-dom";
 
 
 export const TransactionContext = React.createContext();
@@ -30,8 +31,7 @@ export const TransactionProvider = ({ children }) => {
     const [claimData, setClaimData] = useState([]);
 
     const metamaskAlert = ("Please install metamask");
-
-
+    
 
     const handleChange = (e, name) => {
 
@@ -107,9 +107,10 @@ export const TransactionProvider = ({ children }) => {
                     claimId: parseInt(request?.claimId._hex),
                     ssn: request?.ssn,
                     owner: request?.owner,
-                    timestamp: new Date(request.timestamp.toNumber() * 1000).toLocaleString(),
+                    timestamp: new Date(request.timestamp.toNumber() * 1000).toLocaleString().replace(/ /g, "-"),
 
                 }));
+
                 console.log(structuredTransactions);
                 setRequests(structuredTransactions);
             } else {
@@ -120,19 +121,6 @@ export const TransactionProvider = ({ children }) => {
         }
     };
 
-    const eventListener = async () => {
-
-        const transactionsContract = getEthereumContract();
-
-        const requestStructureEvent = await transactionsContract.RequiredData();
-
-        requestStructureEvent.watch(function (error, result) {
-
-            if (!error)
-                console.log(result);
-        })
-    }
-
 
     const requireData = async () => {
         try {
@@ -142,8 +130,9 @@ export const TransactionProvider = ({ children }) => {
             const transactionContract = getEthereumContract();
             const transactionHash = await transactionContract.setClaim(_key);
 
-
+            setIsLoading(true);
             await transactionHash.wait();
+            setIsLoading(false);
 
         } catch (error) {
             console.error(error);
@@ -161,9 +150,9 @@ export const TransactionProvider = ({ children }) => {
 
 
             const transactionContract = getEthereumContract();
+        
             const transactionHash = await transactionContract.getClaimsData(eventId);
             console.log("eventId", eventId, transactionHash)
-
 
 
             console.log("fetchData: " + transactionHash);
@@ -195,42 +184,7 @@ export const TransactionProvider = ({ children }) => {
         }
     }
 
-    const sendTransaction = async () => {
-        try {
-            if (!ethereum) return alert(metamaskAlert)
-
-            const { addressTo, amount, keyword, message } = formData;
-            const transactionContract = getEthereumContract();
-            const parsedAmount = ethers.utils.parseEther(amount) // parsing amount to ether
-
-
-            await ethereum.request({   // sending ethereum
-                method: 'eth_sendTransaction',
-                params: [{
-                    from: currentAccount,
-                    to: addressTo,
-                    gas: '0x5208', // 21000 GWEI
-                    value: parsedAmount._hex, // 0.00001
-                }],
-            });
-            const transactionHash = await transactionContract.addToBlockchain(addressTo, parsedAmount, message, keyword);
-            setIsLoading(true);
-            console.log(`Loading - ${transactionHash.hash}`);
-            await transactionHash.wait();
-            setIsLoading(false);
-            console.log(`Success - ${transactionHash.hash}`);
-
-            const transactionCount = await transactionContract.getTransactionCount();
-
-            setTransactionCount(transactionCount.toNumber());
-            // get the data from  the form
-        } catch (error) {
-            console.log(error);
-
-            throw new Error("No Ethereum object. ")
-        }
-    }
-
+    
 
     useEffect(() => {
         checkIfWalletIsConnected();
@@ -246,7 +200,7 @@ export const TransactionProvider = ({ children }) => {
 
 
     return (
-        <TransactionContext.Provider value={{ fetchData, connectWallet, claimData, currentAccount, requests, handleChange, sendTransaction, requireData, sendData, sendDatahandleChange, sendingDatas, isLoading }}>
+        <TransactionContext.Provider value={{ fetchData, connectWallet, claimData, currentAccount, requests, handleChange, requireData, sendData, sendDatahandleChange, sendingDatas, isLoading }}>
             {children}
         </TransactionContext.Provider>
     )

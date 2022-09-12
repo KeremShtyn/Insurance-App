@@ -9,7 +9,7 @@ const SendData = (
 
 ) => {
 
-    const { connectWallet, sendData, requireData, requests, sendingDatas, sendDatahandleChange, isLoading } = useContext(TransactionContext);
+    const {  sendData, sendingDatas, sendDatahandleChange, isLoading } = useContext(TransactionContext);
 
   
     

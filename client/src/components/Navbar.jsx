@@ -46,7 +46,7 @@ const Navbar = ({ direction, ...args }) => {
 
                 <li>
 
-                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/Lists">Event List</Link>
+                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/Lists">Claim List</Link>
 
                 </li>
                 <li>
@@ -56,14 +56,16 @@ const Navbar = ({ direction, ...args }) => {
                 </li>
                 <li>
 
-                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/Eventsending">Request Data</Link>
+                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/Eventsending">Claim Data</Link>
 
                 </li>
-                <li>
+                
+                {currentAccount &&
+                    (<li>
 
-                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/RequestedDatas">Sent Data</Link>
+                    <Link className=" py-2  mx-4 rounded-full cursor-pointer " to="/ClaimedDatas">My Claims</Link>
 
-                </li>
+                </li>)}
                 <div className="d-flex p-2">
                     <Dropdown isOpen={dropdownOpen} toggle={toggle} direction={direction} >
                         <DropdownToggle caret className="hover:bg-[#2952e3] bg-[#2952e3] rounded-full" color="primary">Companies</DropdownToggle>

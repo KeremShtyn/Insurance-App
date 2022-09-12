@@ -4,21 +4,10 @@ import { useLocation } from "react-router-dom";
 import { TransactionContext } from '../context/TransactionContext'
 import { Table } from 'reactstrap';
 
-const RequestCard = ({ data, i }) => {
-
-
-    return (
-
-        <li key={i}>
-            {data}
-        </li>
-
-    )
-}
 
 
 const getClaimsData = ({ location }) => {
-    const { sendingDatas, currentAccount, fetchData } = useContext(TransactionContext);
+    const { currentAccount, fetchData } = useContext(TransactionContext);
     const query = new URLSearchParams(window.location.search);
     //const claimId = query.get("selectedEventId");
     const claimId = location.state.myId;

@@ -7,11 +7,10 @@ import useFetch from '../hooks/useFetch';
 
 
 
-const TransactionsCard = ({ key1, owner, name, status }) => {
+const TransactionsCard = ({ ssn, owner, status, timestamp }) => {
 
-  console.log(key1);
   return (
-    <div className="gradient-bg-services m-4 flex flex-1
+    <div className="bg-[#2f3e6a] text-white m-4 flex flex-1
       2xl:min-w-[450px]
       2xl:max-w-[500px]
       sm:min-w-[270px]
@@ -24,16 +23,8 @@ const TransactionsCard = ({ key1, owner, name, status }) => {
           <a href={`https://testnet.snowtrace.io/address/${owner}`} target="_blank" rel="noreferrer">
             <p className=" text-base">Owner: {owner}</p>
           </a>
-          <p className=" text-base">name: {name}</p>
-
-          <p className=" text-base">Status: {
-            !status ?
-              (<text> Pending</text>) :
-              (<text> Completed</text>)
-          } </p>
-
-
-          <p className=" text-base">Key: {key1}</p>
+          <p className=" text-base">SSN: {ssn}</p>
+          <p className=" text-base">Timestamp: {timestamp}</p>
 
 
         </div>
